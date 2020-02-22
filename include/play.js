@@ -1,6 +1,6 @@
 const ytdl= require("ytdl-core");
 const { RichEmbed } = require("discord.js");
-const{autoplay} = require("../functions.js")
+const{autoplay} = require("../musicFunctions.js")
 
 module.exports = {
   async play(song, message) {
