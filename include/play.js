@@ -40,9 +40,9 @@ module.exports = {
           let lastSong = queue.songs.shift();
           queue.songs.push(lastSong);
           module.exports.play(queue.songs[0], message);
-        } else if(queue.autoplay) {
+        } else if(queue.autoplay && song ) {
+
           autoplay(song,message);
-          console.log(autoplay(song,message));
           module.exports.play(queue.songs[0], message); 
 
         } else {

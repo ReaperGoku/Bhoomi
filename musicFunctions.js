@@ -28,11 +28,18 @@ module.exports = {
         let songInfo = null;
         let videoId= null;
 
+        try {
         if (serverQueue) {
+     
              videoId = serverQueue.songs[0].id;
+          
           } else {
+            
             videoId = queueConstruct.songs[0].id;
           }
+        } catch(err) {
+          return;
+        }
         
       
         try {

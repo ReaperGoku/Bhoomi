@@ -2,10 +2,11 @@ const{autoplay} = require("../../musicFunctions.js")
 
 module.exports = {
     name : "autoplay",
+    aliases : ["ap"],
     category: "music",
     description : "Toggle music autoplay",
 
-    run : async(client,message) => {
+    run : async(client, message, song) => {
 
     const serverQueue = message.client.queue.get(message.guild.id);
 
