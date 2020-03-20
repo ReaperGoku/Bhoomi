@@ -16,17 +16,17 @@ module.exports = {
 
         const youtube = new YouTubeAPI(config.YOUTUBE_API_KEY);
 
-        const channel = message.member.voiceChannel;
+        const channel = message.member.voice.channel;
 
     if (!args.length)
-      return message.reply("\n \`\`\`Usage: /playlist <YouTube Playlist URL | Playlist Name>\`\`\`").catch(console.error);
-    if (!channel) return message.reply("\n \`\`\`You need to join a voice channel first!\`\`\`").catch(console.error);
+      return message.reply("\`\`\`Usage: /playlist <YouTube Playlist URL | Playlist Name>\`\`\`").catch(console.error);
+    if (!channel) return message.reply("\`\`\`You need to join a voice channel first!\`\`\`").catch(console.error);
 
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT"))
-      return message.reply("\n \`\`\`Cannot connect to voice channel, missing permissions\`\`\`");
+      return message.reply("\`\`\`Cannot connect to voice channel, missing permissions\`\`\`");
     if (!permissions.has("SPEAK"))
-      return message.reply("\n \`\`\`I cannot speak in this voice channel, make sure I have the proper permissions!\`\`\`");
+      return message.reply("\`\`\`I cannot speak in this voice channel, make sure I have the proper permissions!\`\`\`");
 
     const search = args.join(" ");
     const pattern = /^.*(youtu.be\/|list=)([^#\&\?]*).*/gi;
@@ -35,12 +35,13 @@ module.exports = {
 
     const serverQueue = message.client.queue.get(message.guild.id);
     const queueConstruct = {
+      guild : message.guild,
       textChannel: message.channel,
       channel,
       connection: null,
       songs: [],
       loop: false,
-      volume: 100,
+      volume: 50,
       playing: true,
       autoplay: false
     };
@@ -87,8 +88,8 @@ module.exports = {
       .send("\n" +
         `\`\`\`${message.member.displayName} 📃 Added a playlist - ${playlist.title} <${playlist.url}>
 
-${queueConstruct.songs.map((song, index) => index + 1 + ". " + song.title).join("\n")}
-\`\`\``,
+        ${queueConstruct.songs.map((song, index) => index + 1 + ". " + song.title).join("\n")}
+        \`\`\``,
         { split: true }
       )
       .catch(console.error);
@@ -101,10 +102,10 @@ ${queueConstruct.songs.map((song, index) => index + 1 + ". " + song.title).join(
         queueConstruct.connection = connection;
         play(queueConstruct.songs[0], message);
       } catch (error) {
-        console.error(`\n \`\`\`Could not join voice channel: ${error}\`\`\``);
+        console.error(`\`\`\`Could not join voice channel: ${error}\`\`\``);
         message.client.queue.delete(message.guild.id);
         await channel.leave();
-        return message.channel.send(`\n \`\`\`Could not join the channel: ${error}\`\`\``).catch(console.error);
+        return message.channel.send(`\`\`\`Could not join the channel: ${error}\`\`\``).catch(console.error);
       }
     }
     }

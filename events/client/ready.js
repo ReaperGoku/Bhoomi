@@ -1,4 +1,4 @@
 module.exports = async (client) => {
     console.log('I am online');
-    client.user.setActivity(': DM me for any issue!', { type: 'WATCHING' });
+    client.user.setActivity(' SONGS FOR YOU! <,>', { type: 'PLAYING' });
 }

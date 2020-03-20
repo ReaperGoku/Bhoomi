@@ -6,12 +6,18 @@ module.exports = {
     usage: "[ | ]",
 
     run : async(client, message, args) => {
+
+        const serverQueue = message.client.queue.get(message.guild.id);
+
+        if (!serverQueue)
+        return message.reply("\`\`\`There is nothing playing.\`\`\`").catch(console.error);
+  
+        if (!serverQueue.channel.members.has(message.member.id))
+        return message.reply(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
         
         if (!args.length) return message.reply("\n \`\`\`Usage: /remove <Queue Number>\`\`\`");
-    const serverQueue = message.client.queue.get(message.guild.id);
-    if (!serverQueue) return message.channel.send("\n \`\`\`There is no queue.\`\`\`").catch(console.error);
-
-    const song = serverQueue.songs.splice(args[0] - 1, 1);
-    serverQueue.textChannel.send(`\n \`\`\`${message.author} ❌ removed ${song[0].title} from the queue.\`\`\``);
+    
+        const song = serverQueue.songs.splice(args[0] - 1, 1);
+        serverQueue.textChannel.send(`\`\`\`${message.author} ❌ removed ${song[0].title} from the queue.\`\`\``).catch(console.error);
     }
 };
