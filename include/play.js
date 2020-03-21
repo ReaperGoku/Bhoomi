@@ -7,9 +7,7 @@ module.exports = {
     const queue = message.client.queue.get(message.guild.id);
     
     if (!song) {
-      queue.channel.leave();
       message.client.queue.delete(message.guild.id);
-      return queue.textChannel.send("\n \`\`\`🚫 Music queue ended.\`\`\`").catch(console.error);
     };
     
     try {
@@ -17,7 +15,7 @@ module.exports = {
         filter: "audioonly",
         quality: "highestaudio",
         highWaterMark: 1 << 25,
-        encoderArgs: ['-af', 'equalizer=f=40:width_type=h:width=50:g=15']
+        encoderArgs: ['-af', 'equalizer=f=440:width_type=o:width=2:g=5']
     });
     } catch (error) {
       if (queue) {
@@ -42,6 +40,7 @@ module.exports = {
       })   
       .on("finish", () => {
         if ( checkChannelMembers(message) < 1){
+          queue.connection.dispatcher.end();
           queue.textChannel.client.queue.delete(message.guild.id);
           queue.textChannel.send(`\`\`\`No one is in channel disconnecting!\`\`\``).catch(console.error);
         } else if (queue.loop) {  // if loop is on, push the song back at the end of the queue,so it can repeat endlessly
