@@ -11,12 +11,14 @@ module.exports = {
       const serverQueue = message.client.queue.get(message.guild.id);
 
       if (!serverQueue)
-      return message.reply("\`\`\`There is nothing playing.\`\`\`").catch(console.error);
+      return message.channel.send("\`\`\`ini\n[There is nothing playing.]\`\`\`").catch(console.error);
 
       if (!serverQueue.channel.members.has(message.member.id))
-      return message.reply(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
+      return message.channel.send(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
       
-      autoplay(song,message).catch(console.error);
+      if(!serverQueue.autoplay){
+        autoplay(song,message).catch(console.error);
+      };      
 
       // toggle from false to true and reverse
       serverQueue.autoplay = !serverQueue.autoplay;

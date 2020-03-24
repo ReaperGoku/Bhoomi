@@ -19,14 +19,14 @@ module.exports = {
         const channel = message.member.voice.channel;
 
     if (!args.length)
-      return message.reply("\`\`\`Usage: /playlist <YouTube Playlist URL | Playlist Name>\`\`\`").catch(console.error);
-    if (!channel) return message.reply("\`\`\`You need to join a voice channel first!\`\`\`").catch(console.error);
+      return message.channel.send("\`\`\`Usage: /playlist <YouTube Playlist URL | Playlist Name>\`\`\`").catch(console.error);
+    if (!channel) return message.channel.send("\`\`\`You need to join a voice channel first!\`\`\`").catch(console.error);
 
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT"))
-      return message.reply("\`\`\`Cannot connect to voice channel, missing permissions\`\`\`");
+      return message.channel.send("\`\`\`Cannot connect to voice channel, missing permissions\`\`\`");
     if (!permissions.has("SPEAK"))
-      return message.reply("\`\`\`I cannot speak in this voice channel, make sure I have the proper permissions!\`\`\`");
+      return message.channel.send("\`\`\`I cannot speak in this voice channel, make sure I have the proper permissions!\`\`\`");
 
     const search = args.join(" ");
     const pattern = /^.*(youtu.be\/|list=)([^#\&\?]*).*/gi;
@@ -37,7 +37,7 @@ module.exports = {
     const queueConstruct = {
       guild : message.guild,
       textChannel: message.channel,
-      channel,
+      channel : channel,
       connection: null,
       songs: [],
       loop: false,

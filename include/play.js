@@ -7,7 +7,10 @@ module.exports = {
     const queue = message.client.queue.get(message.guild.id);
     
     if (!song) {
+      setTimeout(function(){ queue.channel.leave();
+      queue.textChannel.send("\` Nothing is playing Disconnecting! \`") }, 20000);
       message.client.queue.delete(message.guild.id);
+      return
     };
     
     try {

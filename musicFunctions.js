@@ -7,9 +7,11 @@ module.exports = {
       YT_ENDPOINT : "https://www.googleapis.com/youtube/v3/",
       YT_TOKEN: process.env.YOUTUBE_API_KEY,
     };
+    const channel = message.member.voice.channel;
     
     const serverQueue = message.client.queue.get(message.guild.id);
     const queueConstruct = {
+      guild : message.guild,
       textChannel: message.channel,
       channel : channel,
       connection: null,
@@ -22,6 +24,7 @@ module.exports = {
 
     let songInfo = null;
     let videoId= null;
+    
     if (!serverQueue.songs.length) {
       if(!queueConstruct.songs.length){
         return;
@@ -32,12 +35,10 @@ module.exports = {
        videoId = serverQueue.songs[0].id;
       }
       try {
-        const requestUrl = `${config.YT_ENDPOINT}search?part=id&relatedToVideoId=${videoId}&type=video&key=${config.YT_TOKEN}`;
-        const ap = await fetch(requestUrl)
-        .then(res => res.json())
-        .then(json => json.items[1].id);
+        
+        const ap = await ytdl.getInfo(videoId);
 
-        songInfo = await ytdl.getInfo(ap.videoId);
+        songInfo = await ytdl.getInfo(ap.related_videos[0].id);
         song = {
           title: songInfo.title,
           url: songInfo.video_url,
@@ -63,7 +64,7 @@ module.exports = {
         } catch (error) {
           console.error(`\n \`\`\`Could not join voice channel: ${error}\`\`\``);
           message.client.queue.delete(message.guild.id);
-          await channel.leave(60000);
+          await channel.leave();
           return message.channel.send(`\n \`\`\`Could not join the channel: ${error}\`\`\``).catch(console.error);
         }
       }

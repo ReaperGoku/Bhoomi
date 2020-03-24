@@ -9,17 +9,17 @@ module.exports = {
       const serverQueue = message.client.queue.get(message.guild.id);
       
       if (!serverQueue)
-      return message.reply("\`\`\`There is nothing playing.\`\`\`").catch(console.error);
+      return message.channel.send("\`\`\`There is nothing playing.\`\`\`").catch(console.error);
 
       if (!serverQueue.channel.members.has(message.member.id))
-      return message.reply(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
+      return message.channel.send(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
     
       return message
-      .reply("\n"+
+      .channel.send("\n"+
       `\`\`\`📃 **Song queue**
-      ${serverQueue.songs.map((song, index) => index + 1 + ". " + song.title).join("\n")}
-      Now playing: ${serverQueue.songs[0].title}
-      \`\`\``,
+${serverQueue.songs.map((song, index) => index + 1 + ". " + song.title).join("\n")}\`\`\`
+\*Now playing:\* ${serverQueue.songs[0].title}
+      `,
       { split: true }
       )
       .catch(console.error);
