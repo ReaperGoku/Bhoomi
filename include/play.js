@@ -5,10 +5,11 @@ const{ autoplay, checkChannelMembers } = require("../musicFunctions.js")
 module.exports = {
   async play(song, message) {
     const queue = message.client.queue.get(message.guild.id);
+    let clientVoiceConnection = message.guild.voice.connection;
     
     if (!song) {
-      setTimeout(function(){ queue.channel.leave();
-      queue.textChannel.send("\` Nothing is playing Disconnecting! \`") }, 20000);
+      clientVoiceConnection.voice.channel.leave();
+      queue.textChannel.send("\`\`\`Nothing is playing Disconnecting! \`\`\`");
       message.client.queue.delete(message.guild.id);
       return
     };
@@ -43,9 +44,9 @@ module.exports = {
       })   
       .on("finish", () => {
         if ( checkChannelMembers(message) < 1){
-          queue.connection.dispatcher.end();
+          clientVoiceConnection.voice.channel.leave();
           queue.textChannel.client.queue.delete(message.guild.id);
-          queue.textChannel.send(`\`\`\`No one is in channel disconnecting!\`\`\``).catch(console.error);
+          return queue.textChannel.send(`\`\`\`No one is in channel disconnecting!\`\`\``).catch(console.error);
         } else if (queue.loop) {  // if loop is on, push the song back at the end of the queue,so it can repeat endlessly
           let lastSong = queue.songs.shift();
           queue.songs.push(lastSong);
@@ -62,7 +63,7 @@ module.exports = {
     
       queue.connection.on("disconnect",() => {
         queue.textChannel.client.queue.delete(message.guild.id);
-      });
+      })
       
       dispatcher.setVolumeLogarithmic(queue.volume / 100);
       

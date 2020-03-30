@@ -6,13 +6,14 @@ module.exports = {
     usage: "[ | ]",
 
     run : async(client, message, args) => {
-
+    
         const serverQueue = message.client.queue.get(message.guild.id);
-
+        let clientVoiceConnection = message.guild.voice.connection
+        
         if (!serverQueue)
         return message.channel.send("\`\`\`There is nothing playing.\`\`\`").catch(console.error);
-  
-        if (!serverQueue.channel.members.has(message.member.id))
+    
+        if (!clientVoiceConnection.voice.channel.members.has(message.member.id))
         return message.channel.send(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
         
         if (!args.length) return message.channel.send("\n \`\`\`Usage: /remove <Queue Number>\`\`\`");

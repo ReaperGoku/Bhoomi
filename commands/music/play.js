@@ -37,7 +37,7 @@ module.exports = {
         // Start the playlist if playlist url was provided
         if (!videoPattern.test(args[0]) && playlistPattern.test(args[0])) {
           return message.client.commands.get("playlist").run(client, message, args);
-        }
+        };
     
         const serverQueue = message.client.queue.get(message.guild.id);
         const queueConstruct = {
@@ -89,6 +89,11 @@ module.exports = {
         }
     
         if (serverQueue) {
+          let clientVoiceConnection = message.guild.voice.connection;
+  
+          if (!clientVoiceConnection.voice.channel.members.has(message.member.id))
+          return message.channel.send(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
+
           serverQueue.songs.push(song);
 
           return serverQueue.textChannel

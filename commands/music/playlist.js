@@ -75,6 +75,11 @@ module.exports = {
       };
 
       if (serverQueue) {
+        let clientVoiceConnection = message.guild.voice.connection;
+
+        if (!clientVoiceConnection.voice.channel.members.has(message.member.id))
+        return message.channel.send(`\`\`\`You need to join a voice channel ${serverQueue.channel.name}\`\`\``).catch(console.error);
+        
         serverQueue.songs.push(song);
         message.channel
           .send(`\n \`\`\`✅ ${song.title} has been added to the queue by ${message.member.displayName}\`\`\``)
