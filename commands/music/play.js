@@ -12,10 +12,12 @@ module.exports = {
 
     run : async(client, message, args) => {
         const config = {
-            YOUTUBE_API_KEY : process.env.YOUTUBE_API_KEY
+            YOUTUBE_API_KEY : process.env.YOUTUBE_API_KEY,
+            YOUTUBE_API_KEY1 : process.env.YOUTUBE_API_KEY1
         };
 
         const youtube = new YouTubeAPI(config.YOUTUBE_API_KEY);
+        const youtube1 = new YouTubeAPI(config.YOUTUBE_API_KEY);
 
         const channel = message.member.voice.channel;
 
@@ -85,6 +87,18 @@ module.exports = {
             };
           } catch (error) {
             console.error(error);
+            try {
+              const results = await youtube1.searchVideos(search, 1);
+              songInfo = await ytdl.getInfo(results[0].url);
+              song = {
+                title: songInfo.title,
+                url: songInfo.video_url,
+                duration: songInfo.length_seconds,
+                id: songInfo.video_id
+              };
+            } catch (error) {
+              console.error(error);
+            }
           }
         }
     

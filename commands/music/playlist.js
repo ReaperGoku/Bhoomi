@@ -11,10 +11,12 @@ module.exports = {
     run : async(client, message, args) => {
         const config = {
             YOUTUBE_API_KEY : process.env.YOUTUBE_API_KEY,
+            YOUTUBE_API_KEY1 : process.env.YOUTUBE_API_KEY1,
             MAX_PLAYLIST_SIZE : 10
         };
 
         const youtube = new YouTubeAPI(config.YOUTUBE_API_KEY);
+        const youtube1 = new YouTubeAPI(config.YOUTUBE_API_KEY);
 
         const channel = message.member.voice.channel;
 
@@ -64,6 +66,13 @@ module.exports = {
         videos = await playlist.getVideos(config.MAX_PLAYLIST_SIZE || 10, { part: "snippet" });
       } catch (error) {
         console.error(error);
+        try {
+          const results = await youtube.searchPlaylists(search, 1, { part: "snippet" });
+          playlist = results[0];
+          videos = await playlist.getVideos(config.MAX_PLAYLIST_SIZE || 10, { part: "snippet" });
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
 

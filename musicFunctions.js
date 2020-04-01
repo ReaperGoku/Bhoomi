@@ -3,10 +3,7 @@ const ytdl = require("ytdl-core");
 
 module.exports = {
   autoplay: async function(song, message){
-    const config = {
-      YT_ENDPOINT : "https://www.googleapis.com/youtube/v3/",
-      YT_TOKEN: process.env.YOUTUBE_API_KEY,
-    };
+    
     const channel = message.member.voice.channel;
     
     const serverQueue = message.client.queue.get(message.guild.id);
