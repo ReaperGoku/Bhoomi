@@ -17,7 +17,7 @@ module.exports = {
         };
 
         const youtube = new YouTubeAPI(config.YOUTUBE_API_KEY);
-        const youtube1 = new YouTubeAPI(config.YOUTUBE_API_KEY);
+        const youtube1 = new YouTubeAPI(config.YOUTUBE_API_KEY1);
 
         const channel = message.member.voice.channel;
 
